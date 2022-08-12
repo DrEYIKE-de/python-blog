@@ -1,0 +1,62 @@
+{% extends 'blog/base.html' %}
+
+{% block title %}Article - {{post.title}}{% endblock title %}
+
+{% block content %}
+
+    <h1>{{ post.title }}</h1>
+     <p class="date">
+       Published {{ post.publish }} by {{ post.author }}
+     </p>
+     
+    {{ post.body|linebreaks }}
+
+    <p>
+     
+      <a href="{% url 'blog:post_share' post.id %}" class="">
+        share the post
+      </a>
+    </p>
+
+    {% with comments.count as total_comments %}
+      <p>
+        ({{ total_comments }}) comment{{ total_comments|pluralize }}
+      </p>
+    {% endwith %}
+
+    {% for comment in comments %}
+      <div class="comment">
+        <p class='info'>
+          {{ comment.name }} <i>{{ comment.email }}</i>
+          <p>  cree le {{ comment.created_at }} </p>
+        </p>
+       *** {{ comment.body }}
+      </div>
+      {% empty %}
+  
+      <p>There is no comment yet</p>
+      
+    {% endfor %}
+
+
+    {% if new_comment %}
+      <p>Your comment has been successfull added</p>
+    {% endif %}
+
+    <br>
+    <h4>Add a Comment</h4>
+
+    <form method="post">
+      {% csrf_token %}
+      {{ comment_form.as_p }}
+      <input type="submit" value="add a comment">
+    </form>
+
+
+
+
+
+
+
+
+{% endblock content %}
